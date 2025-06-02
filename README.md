@@ -221,5 +221,5 @@ Step 8: Default Username And Password For User Is "shashi@demo.com" And "shashi"
 
 
 #### "Suggestions and project Improvement are Invited"
-#### Shashi Raj
+#### Mude Indira
 ##### Project Leader
