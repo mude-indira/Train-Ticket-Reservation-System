@@ -127,31 +127,35 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String registerUser(UserBean customer) {
-		String responseCode = ResponseCode.FAILURE.toString();
-		String query = "INSERT INTO " + TABLE_NAME + " VALUES(?,?,?,?,?,?)";
-		try {
-			Connection con = DBUtil.getConnection();
-			PreparedStatement ps = con.prepareStatement(query);
-			ps.setString(1, customer.getMailId());
-			ps.setString(2, customer.getPWord());
-			ps.setString(3, customer.getFName());
-			ps.setString(4, customer.getLName());
-			ps.setString(5, customer.getAddr());
-			ps.setLong(6, customer.getPhNo());
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				responseCode = ResponseCode.SUCCESS.toString();
-			}
-			ps.close();
-		} catch (SQLException | TrainException e) {
-			if (e.getMessage().toUpperCase().contains("ORA-00001")) {
-				responseCode += " : " + "User With Id: " + customer.getMailId() + " is already registered ";
-			} else {
-				responseCode += " : " + e.getMessage();
-			}
-		}
-		return responseCode;
+	    String responseCode = ResponseCode.FAILURE.toString();
+	    String query = "INSERT INTO " + TABLE_NAME + " VALUES(?,?,?,?,?,?)";
+
+	    try {
+	        Connection con = DBUtil.getConnection();
+	        PreparedStatement ps = con.prepareStatement(query);
+	        ps.setString(1, customer.getMailId());
+	        ps.setString(2, customer.getPWord());
+	        ps.setString(3, customer.getFName());
+	        ps.setString(4, customer.getLName());
+	        ps.setString(5, customer.getAddr());
+	        ps.setLong(6, customer.getPhNo());
+
+	        int rowsAffected = ps.executeUpdate(); // ✅ Use this instead of executeQuery
+	        if (rowsAffected > 0) {
+	            responseCode = ResponseCode.SUCCESS.toString();
+	        }
+	        ps.close();
+	    } catch (SQLException | TrainException e) {
+	        if (e.getMessage().toUpperCase().contains("ORA-00001") || 
+	            e.getMessage().toUpperCase().contains("DUPLICATE")) {
+	            responseCode += " : " + "User With Id: " + customer.getMailId() + " is already registered ";
+	        } else {
+	            responseCode += " : " + e.getMessage();
+	        }
+	    }
+	    return responseCode;
 	}
+
 
 	@Override
 	public UserBean loginUser(String username, String password) throws TrainException {

@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.shashi.beans.HistoryBean;
 import com.shashi.beans.TrainBean;
@@ -42,6 +43,7 @@ public class BookTrains extends HttpServlet {
 		ServletContext sct = req.getServletContext();
 
 		try {
+			HttpSession session = req.getSession();
 			int seat = (int) sct.getAttribute("seats");
 			String trainNo = (String) sct.getAttribute("trainnumber");
 			String journeyDate = (String) sct.getAttribute("journeydate");
@@ -50,7 +52,7 @@ public class BookTrains extends HttpServlet {
 			String userMailId = TrainUtil.getCurrentUserEmail(req);
 
 			SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MMM-yyyy");
+			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 			java.util.Date utilDate;
 			String date = LocalDate.now().toString();
 			utilDate = inputFormat.parse(journeyDate);
